@@ -1,0 +1,35 @@
+## Build & Output Directories
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+dist/
+build/
+
+## Visual Studio / VS Code / JetBrains Rider
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## User Secrets & Local AppSettings
+appsettings.*.local.json
+secrets.json
+
+## Uploaded Files (Runtime data)
+wwwroot/uploads/**
+!wwwroot/uploads/.gitkeep
+
+## Test Results & Coverage
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+## OS Generated Files
+.DS_Store
+Thumbs.db

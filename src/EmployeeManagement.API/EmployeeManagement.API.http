@@ -1,0 +1,101 @@
+@host = https://localhost:7186
+
+### 1. Login as Admin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "admin",
+  "password": "Password123!"
+}
+
+> {%
+  client.global.set("admin_token", response.body.token);
+%}
+
+### 2. Login as HR Manager
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "hrmanager",
+  "password": "Password123!"
+}
+
+> {%
+  client.global.set("hr_token", response.body.token);
+%}
+
+### 3. Login as Viewer
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "viewer",
+  "password": "Password123!"
+}
+
+> {%
+  client.global.set("viewer_token", response.body.token);
+%}
+
+### 4. Register a New User
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "sarah",
+  "email": "sarah@company.com",
+  "password": "Password123!",
+  "role": "HR_Manager"
+}
+
+### 5. Get Paginated Employees (Page 1, 10 items by default)
+GET {{host}}/api/employees
+Authorization: Bearer {{viewer_token}}
+
+### 5.1 Get Paginated Employees (Page 2, 5 items per page)
+GET {{host}}/api/employees?page=2&pageSize=5
+Authorization: Bearer {{viewer_token}}
+
+### 6. Create Employee (HR_Manager allowed, Viewer forbidden 403)
+POST {{host}}/api/employees
+Authorization: Bearer {{hr_token}}
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@company.com",
+  "department": "Engineering",
+  "salary": 85000
+}
+
+### 7. Delete Employee (Admin ONLY, HR_Manager forbidden 403)
+DELETE {{host}}/api/employees/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{admin_token}}
+
+### 8. Upload Employee Photo (multipart/form-data)
+POST {{host}}/api/employees/00000000-0000-0000-0000-000000000000/photo
+Authorization: Bearer {{hr_token}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="avatar.png"
+Content-Type: image/png
+
+< ./avatar.png
+--boundary--
+
+### 9. Delete Employee Photo
+DELETE {{host}}/api/employees/00000000-0000-0000-0000-000000000000/photo
+Authorization: Bearer {{hr_token}}
+
+### 10. Health Check - Liveness Probe (Kubernetes livenessProbe)
+GET {{host}}/health/live
+
+### 11. Health Check - Readiness Probe (Kubernetes readinessProbe & Load Balancer)
+GET {{host}}/health/ready
+
+### 12. Health Check - Detailed System Diagnostics (Full JSON)
+GET {{host}}/health

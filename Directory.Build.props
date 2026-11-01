@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Suppresses MSB4276 errors from missing workload SDK locators in this environment.
+    Disables the Roslyn compiler server (VBCSCompiler) which cannot connect via named pipes in the sandbox.
+    This file is picked up automatically by MSBuild from any project under this directory.
+  -->
+  <PropertyGroup>
+    <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
+    <_SkipUpgradeNetAnalyzersNuGetAudit>true</_SkipUpgradeNetAnalyzersNuGetAudit>
+    <!-- Force out-of-process compilation without the compiler server -->
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+</Project>
